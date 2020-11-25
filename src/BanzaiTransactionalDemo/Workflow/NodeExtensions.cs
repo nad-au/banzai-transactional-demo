@@ -11,6 +11,10 @@ namespace BanzaiTransactionalDemo.Workflow
         public static async Task<NodeResult> ExecuteAsTransactional<T>(this IMultiNode<T> multiNode, IUnitOfWorkBuilder uow, T context)
         {
             var transactionals = multiNode.GetUniqueTransactionals();
+            foreach (var transactional in transactionals)
+            {
+                await Console.Out.WriteLineAsync($"Subscribing to UoW: {transactional.GetType().Name}");
+            }
 
             uow.Subscribe(transactionals);
             
@@ -28,7 +32,6 @@ namespace BanzaiTransactionalDemo.Workflow
             } catch (Exception e) {
                 await uow.RollbackAsync();
                 
-                // TODO: Should not throw, but return error, or set overall status as failed
                 throw;
             }
         }
