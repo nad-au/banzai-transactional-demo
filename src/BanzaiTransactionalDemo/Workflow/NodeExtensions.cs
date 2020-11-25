@@ -52,5 +52,24 @@ namespace BanzaiTransactionalDemo.Workflow
 
             return transactionals.ToArray();
         }
+
+        public static IEnumerable<string> GetErrorMessages(this NodeResult nodeResult)
+        {
+            var messages = new List<string>();
+            if (nodeResult.Exception != null)
+            {
+                messages.Add(nodeResult.Exception.Message);
+            }
+
+            foreach (var childResult in nodeResult.ChildResults)
+            {
+                if (childResult.Exception != null)
+                {
+                    messages.Add(childResult.Exception.Message);
+                }
+            }
+
+            return messages;
+        }
     }
 }

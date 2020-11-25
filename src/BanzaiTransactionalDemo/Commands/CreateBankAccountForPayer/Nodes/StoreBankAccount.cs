@@ -3,31 +3,36 @@ using System.Threading.Tasks;
 using Banzai;
 using BanzaiTransactionalDemo.UoW;
 using BanzaiTransactionalDemo.Workflow;
+using Dawn;
 
 namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
 {
     public class StoreBankAccount : TransactionalNode<CreateBankAccountForPayerContext>
     {
-        private readonly Transactional3 _transactional3;
+        private readonly BankAccountRepository _bankAccountRepository;
         
-        public StoreBankAccount(Transactional3 transactional3)
+        public StoreBankAccount(BankAccountRepository bankAccountRepository)
         {
-            _transactional3 = transactional3;
+            _bankAccountRepository = bankAccountRepository;
         }
         
+        protected override void OnBeforeExecute(IExecutionContext<CreateBankAccountForPayerContext> context)
+        {
+            Guard.Argument(context.Subject.NewBankAccount).NotNull();
+        }
+
         protected override async Task<NodeResultStatus> PerformExecuteAsync(IExecutionContext<CreateBankAccountForPayerContext> context)
         {
+            await _bankAccountRepository.Add(context.Subject.NewBankAccount);
+            
             await Console.Out.WriteLineAsync($"Executed {nameof(StoreBankAccount)}");
-
-            var cmdContext = context.Subject;
-            await Console.Out.WriteLineAsync($"{nameof(cmdContext.ExtraProp1)}: {cmdContext.ExtraProp1}");
 
             return NodeResultStatus.Succeeded;
         }
 
         public override ITransactional[] GetTransactionals()
         {
-            return new ITransactional[] {_transactional3};
+            return new ITransactional[] {_bankAccountRepository};
         }
     }
 }

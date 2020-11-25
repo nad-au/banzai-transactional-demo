@@ -5,6 +5,7 @@ using Banzai.Autofac;
 using BanzaiTransactionalDemo.Commands;
 using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer;
 using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes;
+using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Validators;
 using BanzaiTransactionalDemo.UoW;
 using BanzaiTransactionalDemo.Workflow;
 using MediatR;
@@ -19,8 +20,22 @@ namespace BanzaiTransactionalDemo
 
             var mediator = container.Resolve<IMediator>();
             
-            var result = await mediator.Send(new CreateBankAccountForPayerCommand());
-            await Console.Out.WriteLineAsync($"Success: {result}");
+            var result = await mediator.Send(new CreateBankAccountForPayerCommand
+            {
+                PayerId = 1,
+                Bsb = "123-456",
+                AccountNumber = "4567890",
+                AccountName = "TEST",
+                IsPrimary = true
+            });
+            await Console.Out.WriteLineAsync($"Success: {result.Success}");
+            if (result.Messages != null)
+            {
+                foreach (var message in result.Messages)
+                {
+                    await Console.Out.WriteLineAsync($"Message: {message}");
+                }
+            }
         }
 
         private static IContainer GetContainer()
@@ -48,9 +63,10 @@ namespace BanzaiTransactionalDemo
                 .InstancePerDependency();
 
             builder.RegisterType<UnitOfWorkBuilder>().AsImplementedInterfaces();
-            builder.RegisterType<Transactional1>().SingleInstance();
-            builder.RegisterType<Transactional3>().SingleInstance();
-            builder.RegisterType<Transactional3>().SingleInstance();
+            builder.RegisterType<PayerRepository>().SingleInstance();
+            builder.RegisterType<BankAccountRepository>().SingleInstance();
+            
+            builder.RegisterType<BankAccountValidator>();
 
             return builder.Build();
         }

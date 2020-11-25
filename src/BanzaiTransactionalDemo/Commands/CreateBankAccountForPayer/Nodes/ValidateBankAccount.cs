@@ -1,30 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Banzai;
-using BanzaiTransactionalDemo.UoW;
-using BanzaiTransactionalDemo.Workflow;
+using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Validators;
+using Dawn;
 
 namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
 {
-    public class ValidateBankAccount : TransactionalNode<CreateBankAccountForPayerContext>
+    public class ValidateBankAccount : Node<CreateBankAccountForPayerContext>
     {
-        private readonly Transactional3 _transactional3;
+        private readonly BankAccountValidator _bankAccountValidator;
         
-        public ValidateBankAccount(Transactional3 transactional3)
+        public ValidateBankAccount(BankAccountValidator bankAccountValidator)
         {
-            _transactional3 = transactional3;
+            _bankAccountValidator = bankAccountValidator;
         }
         
+        protected override void OnBeforeExecute(IExecutionContext<CreateBankAccountForPayerContext> context)
+        {
+            Guard.Argument(context.Subject.NewBankAccount).NotNull();
+        }
+
         protected override async Task<NodeResultStatus> PerformExecuteAsync(IExecutionContext<CreateBankAccountForPayerContext> context)
         {
             await Console.Out.WriteLineAsync($"Executed {nameof(ValidateBankAccount)}");
 
-            return NodeResultStatus.Succeeded;
-        }
-
-        public override ITransactional[] GetTransactionals()
-        {
-            return new ITransactional[] {_transactional3};
+            return _bankAccountValidator.Validate(context.Subject.NewBankAccount)
+                ? NodeResultStatus.Succeeded
+                : NodeResultStatus.Failed;
         }
     }
 }

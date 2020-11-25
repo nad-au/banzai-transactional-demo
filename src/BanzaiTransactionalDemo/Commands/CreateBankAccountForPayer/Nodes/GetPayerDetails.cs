@@ -3,31 +3,42 @@ using System.Threading.Tasks;
 using Banzai;
 using BanzaiTransactionalDemo.UoW;
 using BanzaiTransactionalDemo.Workflow;
+using Dawn;
 
 namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
 {
     public class GetPayerDetails : TransactionalNode<CreateBankAccountForPayerContext>
     {
-        private readonly Transactional1 _transactional1;
+        private readonly PayerRepository _payerRepository;
         
-        public GetPayerDetails(Transactional1 transactional1)
+        public GetPayerDetails(PayerRepository payerRepository)
         {
-            _transactional1 = transactional1;
+            _payerRepository = payerRepository;
         }
         
+        protected override void OnBeforeExecute(IExecutionContext<CreateBankAccountForPayerContext> context)
+        {
+            var command = context.Subject.Data;
+
+            Guard.Argument(command.PayerId, nameof(command.PayerId)).GreaterThan(0);
+        }
+
         protected override async Task<NodeResultStatus> PerformExecuteAsync(IExecutionContext<CreateBankAccountForPayerContext> context)
         {
-            await Console.Out.WriteLineAsync($"Executed {nameof(GetPayerDetails)}");
+            var payer = await _payerRepository.Get(context.Subject.Data.PayerId);
+            if (payer == null)
+            {
+                return NodeResultStatus.Failed;
+            }
 
-            var cmdContext = context.Subject;
-            cmdContext.ExtraProp1 = "Foo";
+            await Console.Out.WriteLineAsync($"Executed {nameof(GetPayerDetails)}");
 
             return NodeResultStatus.Succeeded;
         }
 
         public override ITransactional[] GetTransactionals()
         {
-            return new ITransactional[] {_transactional1};
+            return new ITransactional[] {_payerRepository};
         }
     }
 }

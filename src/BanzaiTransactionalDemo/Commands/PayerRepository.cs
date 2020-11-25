@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
+using BanzaiTransactionalDemo.Entities;
 using BanzaiTransactionalDemo.UoW;
 
 namespace BanzaiTransactionalDemo.Commands
 {
-    public class Transactional3 : ITransactional
+    public class PayerRepository : ITransactional
     {
+        public Task<Payer> Get(long id) => Task.FromResult(new Payer(string.Empty));
+        
         public Task StartAsync()
         {
             return Task.CompletedTask;

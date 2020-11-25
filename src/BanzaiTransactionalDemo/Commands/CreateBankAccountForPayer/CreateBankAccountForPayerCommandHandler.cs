@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Banzai;
 using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes;
@@ -8,7 +9,7 @@ using MediatR;
 
 namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
 {
-    public class CreateBankAccountForPayerCommandHandler : IRequestHandler<CreateBankAccountForPayerCommand, bool>
+    public class CreateBankAccountForPayerCommandHandler : IRequestHandler<CreateBankAccountForPayerCommand, CommandResponse>
     {
         private readonly IWorkflowBuilder<CreateBankAccountForPayerContext> _workflowBuilder;
         private readonly IUnitOfWorkBuilder _uow;
@@ -21,7 +22,7 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
             _uow = uow;
         }
         
-        public async Task<bool> Handle(CreateBankAccountForPayerCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> Handle(CreateBankAccountForPayerCommand request, CancellationToken cancellationToken)
         {
             var context = new CreateBankAccountForPayerContext(request);
             
@@ -35,7 +36,11 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
                 
             var result = await workflow.ExecuteAsTransactional(_uow, context);
 
-            return result.Status == NodeResultStatus.Succeeded;
+            return new CommandResponse
+            {
+                Success = result.Status == NodeResultStatus.Succeeded,
+                Messages = result.GetErrorMessages().ToList()
+            };
         }
     }
 }

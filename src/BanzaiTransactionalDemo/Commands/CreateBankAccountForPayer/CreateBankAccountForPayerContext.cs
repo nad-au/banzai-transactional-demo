@@ -1,4 +1,5 @@
-﻿using BanzaiTransactionalDemo.Workflow;
+﻿using BanzaiTransactionalDemo.Entities;
+using BanzaiTransactionalDemo.Workflow;
 
 namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
 {
@@ -11,8 +12,8 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
         
         public CreateBankAccountForPayerCommand Data { get; private set; }
 
+        public BankAccount NewBankAccount { get; set; }
+        
         public string ExtraProp1 { get; set; }
-        public string ExtraProp2 { get; set; }
-        public string ExtraProp3 { get; set; }
     }
 }
