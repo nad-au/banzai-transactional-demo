@@ -1,6 +1,8 @@
-﻿namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
+﻿using MediatR;
+
+namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
 {
-    public class CreateBankAccountForPayerCommand
+    public class CreateBankAccountForPayerCommand : IRequest<bool>
     {
         
     }

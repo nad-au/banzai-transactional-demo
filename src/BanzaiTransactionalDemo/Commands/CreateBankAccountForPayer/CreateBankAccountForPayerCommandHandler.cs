@@ -1,13 +1,14 @@
-﻿using System;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Banzai;
 using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes;
 using BanzaiTransactionalDemo.UoW;
 using BanzaiTransactionalDemo.Workflow;
+using MediatR;
 
 namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
 {
-    public class CreateBankAccountForPayerCommandHandler : ICommandHandler<CreateBankAccountForPayerCommand>
+    public class CreateBankAccountForPayerCommandHandler : IRequestHandler<CreateBankAccountForPayerCommand, bool>
     {
         private readonly IWorkflowBuilder<CreateBankAccountForPayerContext> _workflowBuilder;
         private readonly IUnitOfWorkBuilder _uow;
@@ -20,9 +21,9 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
             _uow = uow;
         }
         
-        public async Task Handle(CreateBankAccountForPayerCommand command)
+        public async Task<bool> Handle(CreateBankAccountForPayerCommand request, CancellationToken cancellationToken)
         {
-            var context = new CreateBankAccountForPayerContext(command);
+            var context = new CreateBankAccountForPayerContext(request);
             
             var workflow = _workflowBuilder
                 .AddNode<GetPayerDetails>()
@@ -34,10 +35,7 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
                 
             var result = await workflow.ExecuteAsTransactional(_uow, context);
 
-            if (result.Status == NodeResultStatus.Succeeded)
-            {
-                await Console.Out.WriteLineAsync("Success");
-            }
+            return result.Status == NodeResultStatus.Succeeded;
         }
     }
 }

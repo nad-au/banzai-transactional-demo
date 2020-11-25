@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Autofac;
 using Banzai.Autofac;
 using BanzaiTransactionalDemo.Commands;
@@ -6,6 +7,7 @@ using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer;
 using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes;
 using BanzaiTransactionalDemo.UoW;
 using BanzaiTransactionalDemo.Workflow;
+using MediatR;
 
 namespace BanzaiTransactionalDemo
 {
@@ -14,25 +16,43 @@ namespace BanzaiTransactionalDemo
         public static async Task Main(string[] args)
         {
             using var container = GetContainer();
+
+            var mediator = container.Resolve<IMediator>();
             
-            var handler = container.Resolve<ICommandHandler<CreateBankAccountForPayerCommand>>();
-                
-            await handler.Handle(new CreateBankAccountForPayerCommand());
+            var result = await mediator.Send(new CreateBankAccountForPayerCommand());
+            await Console.Out.WriteLineAsync($"Success: {result}");
         }
 
         private static IContainer GetContainer()
         {
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterBanzaiNodes(typeof(GetPayerDetails).Assembly, true);
-            containerBuilder.RegisterType<Transactional1>().SingleInstance();
-            containerBuilder.RegisterType<Transactional3>().SingleInstance();
-            containerBuilder.RegisterType<Transactional3>().SingleInstance();
-            containerBuilder.RegisterGeneric(typeof(WorkflowBuilder<>))
+            var builder = new ContainerBuilder();
+
+            builder.RegisterBanzaiNodes(typeof(GetPayerDetails).Assembly, true);
+            builder.RegisterGeneric(typeof(WorkflowBuilder<>))
                 .As(typeof(IWorkflowBuilder<>));
-            containerBuilder.RegisterType<CreateBankAccountForPayerCommandHandler>().AsImplementedInterfaces();
-            containerBuilder.RegisterType<UnitOfWorkBuilder>().AsImplementedInterfaces();
-            return containerBuilder.Build();
+
+            // Mediator
+            builder
+                .RegisterType<Mediator>()
+                .As<IMediator>()
+                .InstancePerLifetimeScope();
+
+            builder.Register<ServiceFactory>(context =>
+            {
+                var c = context.Resolve<IComponentContext>();
+                return t => c.Resolve(t);
+            });
+
+            builder.RegisterType<CreateBankAccountForPayerCommandHandler>()
+                .AsImplementedInterfaces()
+                .InstancePerDependency();
+
+            builder.RegisterType<UnitOfWorkBuilder>().AsImplementedInterfaces();
+            builder.RegisterType<Transactional1>().SingleInstance();
+            builder.RegisterType<Transactional3>().SingleInstance();
+            builder.RegisterType<Transactional3>().SingleInstance();
+
+            return builder.Build();
         }
     }
-
 }
