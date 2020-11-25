@@ -1,7 +1,7 @@
 ﻿using Banzai;
-using ConsoleApp1.UoW;
+using BanzaiTransactionalDemo.UoW;
 
-namespace ConsoleApp1.Workflow
+namespace BanzaiTransactionalDemo.Workflow
 {
     public interface ITransactionalNode
     {

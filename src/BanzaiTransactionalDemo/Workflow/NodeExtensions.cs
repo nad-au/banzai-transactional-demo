@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Banzai;
-using ConsoleApp1.UoW;
+using BanzaiTransactionalDemo.UoW;
 
-namespace ConsoleApp1.Workflow
+namespace BanzaiTransactionalDemo.Workflow
 {
     public static class NodeExtensions
     {

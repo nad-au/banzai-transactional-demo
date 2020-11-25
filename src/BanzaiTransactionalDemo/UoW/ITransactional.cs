@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ConsoleApp1.UoW
+namespace BanzaiTransactionalDemo.UoW
 {
     public interface ITransactional
     {

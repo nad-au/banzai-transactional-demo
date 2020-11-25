@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using ConsoleApp1.UoW;
+using BanzaiTransactionalDemo.UoW;
 
-namespace ConsoleApp1.Commands
+namespace BanzaiTransactionalDemo.Commands
 {
     public class Transactional2 : ITransactional
     {

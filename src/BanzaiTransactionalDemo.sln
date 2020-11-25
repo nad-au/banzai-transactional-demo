@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{DA1BEA74-EE0D-4C36-9BD3-8C71F575D85D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BanzaiTransactionalDemo", "BanzaiTransactionalDemo\BanzaiTransactionalDemo.csproj", "{DA1BEA74-EE0D-4C36-9BD3-8C71F575D85D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

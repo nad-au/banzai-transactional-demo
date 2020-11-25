@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ConsoleApp1.Commands
+namespace BanzaiTransactionalDemo.Commands
 {
     public interface ICommandHandler<T>
     {

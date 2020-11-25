@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Banzai;
-using ConsoleApp1.Commands.CreateBankAccountForPayer.Nodes;
-using ConsoleApp1.UoW;
-using ConsoleApp1.Workflow;
+using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes;
+using BanzaiTransactionalDemo.UoW;
+using BanzaiTransactionalDemo.Workflow;
 
-namespace ConsoleApp1.Commands.CreateBankAccountForPayer
+namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
 {
     public class CreateBankAccountForPayerCommandHandler : ICommandHandler<CreateBankAccountForPayerCommand>
     {

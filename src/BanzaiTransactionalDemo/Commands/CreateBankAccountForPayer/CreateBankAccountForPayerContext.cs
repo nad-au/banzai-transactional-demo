@@ -1,6 +1,6 @@
-﻿using ConsoleApp1.Workflow;
+﻿using BanzaiTransactionalDemo.Workflow;
 
-namespace ConsoleApp1.Commands.CreateBankAccountForPayer
+namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
 {
     public class CreateBankAccountForPayerContext : IWorkflowContext<CreateBankAccountForPayerCommand>
     {

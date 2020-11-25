@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
 using Banzai.Autofac;
-using ConsoleApp1.Commands;
-using ConsoleApp1.Commands.CreateBankAccountForPayer;
-using ConsoleApp1.Commands.CreateBankAccountForPayer.Nodes;
-using ConsoleApp1.UoW;
-using ConsoleApp1.Workflow;
+using BanzaiTransactionalDemo.Commands;
+using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer;
+using BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes;
+using BanzaiTransactionalDemo.UoW;
+using BanzaiTransactionalDemo.Workflow;
 
-namespace ConsoleApp1
+namespace BanzaiTransactionalDemo
 {
     public static class Program
     {

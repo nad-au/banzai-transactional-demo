@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1.Workflow
+﻿namespace BanzaiTransactionalDemo.Workflow
 {
     public interface IWorkflowContext<T>
     {

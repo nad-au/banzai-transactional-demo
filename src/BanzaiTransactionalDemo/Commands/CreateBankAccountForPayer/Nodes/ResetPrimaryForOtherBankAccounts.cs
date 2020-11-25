@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Banzai;
-using ConsoleApp1.UoW;
-using ConsoleApp1.Workflow;
+using BanzaiTransactionalDemo.UoW;
+using BanzaiTransactionalDemo.Workflow;
 
-namespace ConsoleApp1.Commands.CreateBankAccountForPayer.Nodes
+namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
 {
     public class ResetPrimaryForOtherBankAccounts : TransactionalNode<CreateBankAccountForPayerContext>
     {

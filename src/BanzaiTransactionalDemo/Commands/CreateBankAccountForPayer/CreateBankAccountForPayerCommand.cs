@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1.Commands.CreateBankAccountForPayer
+﻿namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
 {
     public class CreateBankAccountForPayerCommand
     {

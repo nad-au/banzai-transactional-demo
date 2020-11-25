@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Banzai;
 
-namespace ConsoleApp1.Commands.CreateBankAccountForPayer.Nodes
+namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
 {
     public class CreateBankAccountModel : Node<CreateBankAccountForPayerContext>
     {

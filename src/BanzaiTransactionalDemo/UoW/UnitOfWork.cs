@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1.UoW
+namespace BanzaiTransactionalDemo.UoW
 {
     public class UnitOfWork
     {

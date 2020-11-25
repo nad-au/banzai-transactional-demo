@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1.UoW
+﻿namespace BanzaiTransactionalDemo.UoW
 {
     public enum UnitOfWorkStatus
     {
