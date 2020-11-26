@@ -19,22 +19,21 @@ namespace BanzaiTransactionalDemo
             using var container = GetContainer();
 
             var mediator = container.Resolve<IMediator>();
-            
-            var result = await mediator.Send(new CreateBankAccountForPayerCommand
+
+            var command = new CreateBankAccountForPayerCommand
             {
                 PayerId = 1,
                 Bsb = "123-456",
                 AccountNumber = "4567890",
                 AccountName = "TEST",
                 IsPrimary = true
-            });
+            };
+            var result = await mediator.Send(command);
+            
             await Console.Out.WriteLineAsync($"Success: {result.Success}");
-            if (result.Messages != null)
+            foreach (var message in result.Messages)
             {
-                foreach (var message in result.Messages)
-                {
-                    await Console.Out.WriteLineAsync($"Message: {message}");
-                }
+                await Console.Out.WriteLineAsync($"Message: {message}");
             }
         }
 

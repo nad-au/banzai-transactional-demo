@@ -22,12 +22,7 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
             return new ITransactional[] {_bankAccountRepository};
         }
 
-        // Conditionally execute
-        public override Task<bool> ShouldExecuteAsync(IExecutionContext<CreateBankAccountForPayerContext> context)
-        {
-            return Task.FromResult(context.Subject.Data.IsPrimary);
-        }
-
+        // Context / state pre-checks to ensure successful node execution
         protected override void OnBeforeExecute(IExecutionContext<CreateBankAccountForPayerContext> context)
         {
             var command = context.Subject.Data;
@@ -35,6 +30,12 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
             Guard.Argument(command.Bsb, nameof(command.Bsb)).NotNull();
             Guard.Argument(command.AccountNumber, nameof(command.AccountNumber)).NotNull();
             Guard.Argument(command.AccountName, nameof(command.AccountName)).NotNull();
+        }
+
+        // Conditionally execute
+        public override Task<bool> ShouldExecuteAsync(IExecutionContext<CreateBankAccountForPayerContext> context)
+        {
+            return Task.FromResult(context.Subject.Data.IsPrimary);
         }
 
         protected override async Task<NodeResultStatus> PerformExecuteAsync(IExecutionContext<CreateBankAccountForPayerContext> context)

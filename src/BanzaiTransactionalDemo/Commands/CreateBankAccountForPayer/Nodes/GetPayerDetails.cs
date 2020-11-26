@@ -16,6 +16,13 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
             _payerRepository = payerRepository;
         }
         
+        // Return transactional dependencies so workflow executor can subscribe them to UoW Builder
+        public override ITransactional[] GetTransactionals()
+        {
+            return new ITransactional[] {_payerRepository};
+        }
+
+        // Context / state pre-checks to ensure successful node execution
         protected override void OnBeforeExecute(IExecutionContext<CreateBankAccountForPayerContext> context)
         {
             var command = context.Subject.Data;
@@ -34,11 +41,6 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
             await Console.Out.WriteLineAsync($"Executed {nameof(GetPayerDetails)}");
 
             return NodeResultStatus.Succeeded;
-        }
-
-        public override ITransactional[] GetTransactionals()
-        {
-            return new ITransactional[] {_payerRepository};
         }
     }
 }

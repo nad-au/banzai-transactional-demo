@@ -22,10 +22,8 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
             _uow = uow;
         }
         
-        public async Task<CommandResponse> Handle(CreateBankAccountForPayerCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> Handle(CreateBankAccountForPayerCommand command, CancellationToken cancellationToken)
         {
-            var context = new CreateBankAccountForPayerContext(request);
-            
             var workflow = _workflowBuilder
                 .AddNode<GetPayerDetails>()
                 .AddNode<CreateBankAccountModel>()
@@ -34,6 +32,8 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
                 .AddNode<StoreBankAccount>()
                 .Build();
                 
+            var context = new CreateBankAccountForPayerContext(command);
+
             var result = await workflow.ExecuteAsTransactional(_uow, context);
 
             return new CommandResponse

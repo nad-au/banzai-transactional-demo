@@ -10,10 +10,8 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer
             Data = command;
         }
         
-        public CreateBankAccountForPayerCommand Data { get; private set; }
+        public CreateBankAccountForPayerCommand Data { get; }
 
         public BankAccount NewBankAccount { get; set; }
-        
-        public string ExtraProp1 { get; set; }
     }
 }

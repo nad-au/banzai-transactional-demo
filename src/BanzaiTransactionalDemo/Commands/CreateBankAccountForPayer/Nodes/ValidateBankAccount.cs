@@ -15,6 +15,7 @@ namespace BanzaiTransactionalDemo.Commands.CreateBankAccountForPayer.Nodes
             _bankAccountValidator = bankAccountValidator;
         }
         
+        // Context / state pre-checks to ensure successful node execution
         protected override void OnBeforeExecute(IExecutionContext<CreateBankAccountForPayerContext> context)
         {
             Guard.Argument(context.Subject.NewBankAccount).NotNull();
